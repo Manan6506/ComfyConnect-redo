@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<!--#include file="include_head.html" -->
+    <body>
+<!--#include file="include_menu.html" -->
+<div class="container theme-showcase" role="main">
+
+        <div class="cc-hero">
+            <span class="cc-badge">ComfyConnect VPN Server</span>
+            <h2>Server Administration Console</h2>
+            <p>Manage your Virtual Hubs, users, and connections. Set up secure work-from-home access for your team in minutes &mdash; all from your browser.</p>
+        </div>
+
+        <div class="cc-card">
+            <h3>Signing in</h3>
+            <p>This console authenticates with HTTP basic authentication:</p>
+            <ul>
+                <li><strong>Full server administrator:</strong> leave the username empty (or use <code>administrator</code>) and enter the server administrator password.</li>
+                <li><strong>Virtual Hub administrator:</strong> enter the Virtual Hub name as the username and that hub's administrator password.</li>
+            </ul>
+            <p>All actions on this page call the <a href="/api/"><strong>ComfyConnect VPN JSON-RPC API</strong></a> directly. You can also automate the server from your own apps (JavaScript, TypeScript, C#, Java, Python, Ruby, and more) &mdash; see the <a href="/api/"><strong>API reference</strong></a>.</p>
+        </div>
+
+        <div class="cc-card">
+            <h3>Virtual Hubs</h3>
+            <ul id="HUB_LIST"></ul>
+            <p style="margin-top:14px;"><strong>Create a new Virtual Hub</strong></p>
+            <input id="NEW_HUB_NAME" placeholder="e.g. Acme-Corp" />
+            <button class="btn btn-lg btn-primary" onclick="JS.CreateNewHub($('#NEW_HUB_NAME').val(), '#HUB_LIST')">Create Hub</button>
+        </div>
+
+        <div class="cc-card">
+            <h3>Server Information</h3>
+            <ul id="VPN_SERVER_INFO"></ul>
+        </div>
+
+        <div class="cc-card">
+            <h3>Server Status</h3>
+            <ul id="VPN_SERVER_STATUS"></ul>
+        </div>
+
+<!--#include file="include_footer.html" -->
+        </div>
+    </body>
+    <script>
+        JS.ShowVpnServerInfo("#VPN_SERVER_INFO", "#VPN_SERVER_STATUS");
+        JS.ListVirtualHubs("#HUB_LIST");
+    </script>
+</html>

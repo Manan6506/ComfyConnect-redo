@@ -1,0 +1,125 @@
+/* ==========================================================================
+   ComfyConnect VPN — Web Admin Console theme
+   Palette: primary #1E5EFF · teal #14B8A6 · ink #0F172A · surface #F8FAFC
+   Overrides Bootstrap 3 and degrades gracefully if the CDN is unavailable.
+   ========================================================================== */
+
+:root {
+  --cc-primary: #1E5EFF;
+  --cc-primary-600: #1A50DB;
+  --cc-teal: #14B8A6;
+  --cc-ink: #0F172A;
+  --cc-slate: #475569;
+  --cc-surface: #F8FAFC;
+  --cc-card: #FFFFFF;
+  --cc-border: #E2E8F0;
+  --cc-shadow: 0 1px 2px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.06);
+}
+
+html, body {
+  background: var(--cc-surface);
+  color: var(--cc-ink);
+  font-family: 'Segoe UI', system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  padding-top: 84px;
+  padding-bottom: 40px;
+}
+
+a { color: var(--cc-primary); }
+a:hover, a:focus { color: var(--cc-primary-600); }
+
+/* ---- Navbar ---- */
+.cc-navbar.navbar {
+  background: linear-gradient(90deg, var(--cc-ink) 0%, #14224A 60%, var(--cc-primary-600) 140%);
+  border: 0;
+  box-shadow: 0 2px 14px rgba(15,23,42,.18);
+  min-height: 64px;
+}
+.cc-navbar .navbar-brand { height: 64px; display: flex; align-items: center; padding: 0 16px; }
+.cc-navbar .navbar-brand img { display: block; }
+.cc-navbar .navbar-nav > li > a {
+  color: #C7D2FE;
+  font-weight: 600;
+  line-height: 44px;
+  padding-top: 10px; padding-bottom: 10px;
+}
+.cc-navbar .navbar-nav > li > a:hover,
+.cc-navbar .navbar-nav > li > a:focus,
+.cc-navbar .navbar-nav > .active > a { color: #fff; background: rgba(255,255,255,.08); }
+.cc-navbar .dropdown-menu { border: 0; box-shadow: var(--cc-shadow); }
+
+/* ---- Headings ---- */
+h1, h2, h3, h4 { color: var(--cc-ink); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 26px; margin-bottom: 6px; }
+h3 { font-size: 18px; margin-top: 28px; padding-bottom: 8px; border-bottom: 1px solid var(--cc-border); }
+
+/* ---- Hero ---- */
+.cc-hero {
+  background: linear-gradient(135deg, var(--cc-primary) 0%, var(--cc-teal) 100%);
+  color: #fff;
+  border-radius: 16px;
+  padding: 34px 34px;
+  margin-bottom: 26px;
+  box-shadow: var(--cc-shadow);
+}
+.cc-hero h2 { color: #fff; font-size: 28px; }
+.cc-hero p { color: rgba(255,255,255,.92); font-size: 15px; margin-bottom: 0; max-width: 720px; }
+.cc-badge {
+  display: inline-block; background: rgba(255,255,255,.18); color:#fff;
+  border-radius: 999px; padding: 3px 12px; font-size: 12px; font-weight: 600; margin-bottom: 12px;
+}
+
+/* ---- Cards / panels ---- */
+.cc-card {
+  background: var(--cc-card);
+  border: 1px solid var(--cc-border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  box-shadow: var(--cc-shadow);
+}
+.cc-card h3 { margin-top: 0; border: 0; padding-bottom: 4px; }
+
+/* info lists rendered by the console */
+#VPN_SERVER_INFO, #VPN_SERVER_STATUS, #HUB_LIST { list-style: none; padding-left: 0; }
+#VPN_SERVER_INFO li, #VPN_SERVER_STATUS li, #HUB_LIST li {
+  padding: 8px 2px; border-bottom: 1px dashed var(--cc-border); font-size: 14px; color: var(--cc-slate);
+}
+#VPN_SERVER_INFO li:last-child, #VPN_SERVER_STATUS li:last-child, #HUB_LIST li:last-child { border-bottom: 0; }
+
+/* ---- Buttons ---- */
+.btn {
+  border-radius: 10px; font-weight: 600; border: 0; padding: 8px 16px;
+}
+.btn-primary, .btn-lg.btn-primary {
+  background: var(--cc-primary); color: #fff;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active { background: var(--cc-primary-600); color:#fff; }
+.btn-default { background: #EEF2F7; color: var(--cc-ink); }
+.btn-default:hover { background: #E2E8F0; }
+
+/* ---- Inputs ---- */
+input[type="text"], input:not([type]), .form-control {
+  border: 1px solid var(--cc-border);
+  border-radius: 10px;
+  padding: 8px 12px;
+  box-shadow: none;
+}
+input:focus, .form-control:focus {
+  border-color: var(--cc-primary);
+  box-shadow: 0 0 0 3px rgba(30,94,255,.15);
+  outline: none;
+}
+
+/* ---- Footer ---- */
+.cc-footer-hr { border-top: 1px solid var(--cc-border); margin-top: 34px; }
+.cc-footer { color: var(--cc-slate); font-size: 13px; text-align: center; }
+.cc-footer small { color: #94A3B8; }
+
+/* legacy helper kept from original template */
+.theme-dropdown .dropdown-menu { position: static; display: block; margin-bottom: 20px; }
+.theme-showcase > p > .btn { margin: 5px 0; }
+.theme-showcase .navbar .container { width: auto; }

@@ -1,0 +1,35 @@
+ComfyConnect VPN
+Copyright (c) 2026 ComfyConnect.
+
+This product is a white-label distribution built on SoftEther VPN.
+
+--------------------------------------------------------------------------------
+Based on: SoftEther VPN
+    Copyright (c) all contributors on the SoftEther VPN project on GitHub.
+    Copyright (c) Daiyuu Nobori, SoftEther Project at University of Tsukuba,
+    and SoftEther Corporation.
+    Source: https://github.com/SoftEtherVPN/SoftEtherVPN
+    Licensed under the Apache License, Version 2.0 (see LICENSE).
+--------------------------------------------------------------------------------
+
+SoftEther VPN incorporates the following third-party components, whose
+copyright notices are retained in accordance with their licenses:
+
+  BitVisor            (c) 2007, 2008 University of Tsukuba; NICT.
+  OpenSSL             (c) 1998-2011 The OpenSSL Project.
+  zlib                (c) 1995-2004 Jean-loup Gailly and Mark Adler.
+  libedit             (c) 1992, 1993 The Regents of the University of California.
+  libiconv            (c) 2007 Free Software Foundation, Inc.
+  ncurses             (c) 1998-2006 Free Software Foundation, Inc.
+  PKCS #11 (Cryptoki) (c) RSA Security Inc.
+  WinPcap             (c) 2001-2003 NetGroup, Politecnico di Torino (Italy).
+  BLAKE2, tinydir, cpu_features, liboqs, oqs-provider — see their respective
+  license files under 3rdparty/ and src/Mayaqua/3rdparty/.
+
+UI glyph icons are provided by Icons8 (https://icons8.com) under a license
+granted to the SoftEther VPN project; the attribution banner is retained at
+resources/icons8.png.
+
+"SoftEther" is a trademark of its respective owner and is referenced here only
+to attribute the upstream open-source project, as required by the Apache
+License 2.0. "ComfyConnect" is the product name of this distribution.
