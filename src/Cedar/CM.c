@@ -10607,16 +10607,8 @@ void CmRefreshAccountListEx2(HWND hWnd, bool easy, bool style_changed)
 			// Creating a new connection
 			LvInsertAdd(b, ICO_NEW, NULL, 4, _UU("CM_NEW_ICON"), L"", L"", L"");
 
-			if (cm->Client->IsVgcSupported)
-			{
-				// VPN Gate
-				LvInsertAdd(b, ICO_RESEARCH, NULL, 4, _UU("CM_VGC_ICON"), L"", L"", L"");
-			}
-			else if (cm->Client->ShowVgcLink)
-			{
-				// VPN Gate Link
-				LvInsertAdd(b, ICO_INTERNET, NULL, 4, _UU("CM_VGC_LINK"), L"", L"", L"");
-			}
+			// ComfyConnect: the VPN Gate (academic public-relay) entry is removed from
+			// the connection list, so it never appears in the client UI.
 		}
 
 		for (i = 0;i < a.NumItem;i++)

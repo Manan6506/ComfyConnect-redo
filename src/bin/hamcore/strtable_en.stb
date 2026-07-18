@@ -1008,7 +1008,7 @@ CM_TRAY_ICON_RESTORE	The icon in the task tray has been deleted.\r\n\r\nTo resto
 CM_WOULDYOULOAD_IE_PROXY	Currently the Internet Explorer on this computer is configured to use the proxy server "%S".\r\nDo you want to apply the current proxy settings on the new VPN connection setting?\r\n\r\nClick Yes to use the proxy settings of Internet Explorer.\r\nClick No to use direct connection to the VPN Server (does not a proxy server.)\r\nThis setting can be modified in the property screen of the connection settings any time later.
 CM_MSG_TITLE			VPN Server "%S" (Virtual Hub: "%S")
 CM_JUMPLIST_RCCONNECT	Recent VPN Servers
-CM_VPNGATE_MESSAGE		There is the list of Public VPN Relay Servers on the VPN Gate Academic Project Web Site.\r\nAnyone on the Internet can connect a VPN connection to any VPN servers on the list.\r\n\r\nVPN Gate Academic Project is not a part of ComfyConnect VPN.\r\nThis icon provides just a link to http://www.vpngate.net/.\r\nYou need to install VPN Gate Plugin to connect VPN Gate.\r\n\r\nDo you want to visit http://www.vpngate.net/ (provided by University of Tsukuba) ?
+CM_VPNGATE_MESSAGE		This feature is not available in ComfyConnect VPN.
 CM_VLAN_REINSTALL_MSG	After reinstalling the Virtual Network Adapter driver, the current Virtual Network Adapter's MAC address will change. Also, all TCP/IP settings within the Virtual Network Adapter will reset.\r\n\r\nIn case the reinstalled Virtual Network Adapter fails to work, delete it and create a new one. If it still doesn't work properly, please create a new Virtual Network Adapter with a different name.
 
 
@@ -1042,7 +1042,7 @@ VGC_UDP_AVAILABLE		UDP OK
 
 VGC_TITLE				VPN Gate Plug-in Message
 
-VGC_VER_DIFF			The version of VPN Gate Client Plug-in is different from ComfyConnect VPN Client.\r\n\r\n- Current VPN Gate Plug-in: Build %u\r\n- Current ComfyConnect VPN Client: Build %u\r\n\r\nIt is recommended to download and install VPN Gate Plug-in Build %u. Otherwise, communication errors or list-update errors might be occur. If the VPN Server List updating fails many times, update the VPN Gate Plug-in version.\r\n\r\nThe latest VPN Gate Plug-in is available at http://www.vpngate.net/.\r\n(Use a mirror-site if you cannot visit the above web-site directly.)\r\n\r\n
+VGC_VER_DIFF			The version of VPN Gate Client Plug-in is different from ComfyConnect VPN Client.\r\n\r\n- Current VPN Gate Plug-in: Build %u\r\n- Current ComfyConnect VPN Client: Build %u\r\n\r\nIt is recommended to download and install VPN Gate Plug-in Build %u. Otherwise, communication errors or list-update errors might be occur. If the VPN Server List updating fails many times, update the VPN Gate Plug-in version.\r\n\r\nThe latest VPN Gate Plug-in is available at https://comfyconnect.example/.\r\n(Use a mirror-site if you cannot visit the above web-site directly.)\r\n\r\n
 
 VGC_LIST_STR_OK			%S Public VPN Relay Servers on the Earth! (Updated at %S)
 VGC_LIST_STR_OK_2		%S Servers (at %S) - List update failed. Try again. If fails again, download the latest VPN Gate Client.
@@ -1054,7 +1054,7 @@ VGS_NO_HUB_YET			In order to set the message, first you have to commit enabling 
 
 VGS_STOP				VPN Gate Service will stop after you click the OK button.\r\n\r\nAfter VPN Gate Service will be stopped, this computer will never accept new VPN connection requests, however, still-alive VPN Sessions might remain.\r\n (Such VPN sessions sometimes hidden from the enumeration.) \r\n\r\nTo terminate all of still-alive VPN Sessions completely, restart ComfyConnect VPN Server or ComfyConnect VPN Client service, or reboot the computer.
 
-VGS_START				This will activate the VPN Gate Relay Service function.\r\n\r\nVPN Gate Relay Service function must be activated by your own risk.\r\nSome countries prohibit using of encrypted VPN by laws.\r\nFor more details about VPN Gate Relay Service please visit http://www.vpngate.net/en/join.aspx.\r\n\r\nThe VPN Gate Academic Experiment Service is operated as a research project at the graduate school on University of Tsukuba, Japan. The service is governed under the Japanese laws. Other countries' laws are none of our concerns nor responsibilities.\r\n\r\nBy nature, there are almost 200 countries in the World, with different laws. It is impossible to verify every countries' laws and regulations and make the software comply with all countries' laws in advance to release the software. If a user uses VPN Gate service in a specific country, and damaged by public servants of the authority, the developer of either the service or software will never be liable to recover or compensate such damages or criminal responsibilities.\r\nBy using this software and service, the user must observe all concerned laws and rules with user's own responsibility. The user will be completely liable to any damages and responsibilities which are results of using this software and service, regardless of either inside or outside of Japan's territory.\r\nIf you don't agree nor understand the above warnings, do not use any of VPN Gate Academic Experiment Service functions.
+VGS_START				This will activate the VPN Gate Relay Service function.\r\n\r\nVPN Gate Relay Service function must be activated by your own risk.\r\nSome countries prohibit using of encrypted VPN by laws.\r\nFor more details about VPN Gate Relay Service please visit https://comfyconnect.example/en/join.aspx.\r\n\r\nThe VPN Gate Academic Experiment Service is operated as a research project at the graduate school on University of Tsukuba, Japan. The service is governed under the Japanese laws. Other countries' laws are none of our concerns nor responsibilities.\r\n\r\nBy nature, there are almost 200 countries in the World, with different laws. It is impossible to verify every countries' laws and regulations and make the software comply with all countries' laws in advance to release the software. If a user uses VPN Gate service in a specific country, and damaged by public servants of the authority, the developer of either the service or software will never be liable to recover or compensate such damages or criminal responsibilities.\r\nBy using this software and service, the user must observe all concerned laws and rules with user's own responsibility. The user will be completely liable to any damages and responsibilities which are results of using this software and service, regardless of either inside or outside of Japan's territory.\r\nIf you don't agree nor understand the above warnings, do not use any of VPN Gate Academic Experiment Service functions.
 
 
 # Concerning services (Win32)
@@ -4166,7 +4166,7 @@ S_VLAN					Virtual Network Adapter:
 B_WEB					VPN Gate Academic\r\nWeb Site
 B_REFRESH				&Refresh List
 S_REFRESH				Refreshing the List...
-S_RESEARCH				Academic project at University of Tsukuba, Japan.
+S_RESEARCH				ComfyConnect VPN
 S_INFO9					A VPN Server with higher Line Speed (measured by Mbps) and smaller Ping result are usually more comfortable to use. You might be able to browse websites which are normally unreachable from your area if you use VPN servers that are not in your area.
 
 
@@ -4190,13 +4190,13 @@ S_WARNING				If you check the above checkbox and press OK, the VPN Gate Relay Se
 B_OPTION				VPN Gate Service &Option Settings...
 IDOK					&OK
 IDCANCEL				Cancel
-B_WEB					&Browse http://www.vpngate.net/ ...
+B_WEB					&Browse https://comfyconnect.example/ ...
 
 
 PREFIX					D_VGS_OPTION
 CAPTION					VPN Gate Service Options
 S_TITLE					VPN Gate Service Options
-S_1						This computer will be a Public VPN Server. Please fill the operator's information of the server. The information will be published on the list at www.vpngate.net and other related services. The contact address will be also used to contact from VPN Gate Academic Project operators.
+S_1						This computer will be a Public VPN Server. Please fill the operator's information of the server. The information will be published on the list at comfyconnect.example and other related services. The contact address will be also used to contact from VPN Gate Academic Project operators.
 S_2						Operator:
 S_3						&Operator of Server:
 S_19					(Up to 64 letters)
