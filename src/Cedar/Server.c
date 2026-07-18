@@ -2479,6 +2479,13 @@ void SiLoadInitialConfiguration(SERVER *s)
 		s->EnableVpnOverIcmp = false;
 		s->EnableVpnOverDns = false;
 
+		// ComfyConnect: disable NAT traversal (R-UDP) by default. Its listener
+		// registers with SoftEther's *.nat-traversal.softether-network.net servers
+		// and probes external hosts for private-IP discovery. Clients connect to a
+		// directly reachable address instead. Admins can re-enable by setting
+		// DisableNatTraversal=false in the server config.
+		s->DisableNatTraversal = true;
+
 		{
 			LIST *ports = s->PortsUDP;
 

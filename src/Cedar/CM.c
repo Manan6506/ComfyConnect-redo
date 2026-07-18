@@ -1837,7 +1837,7 @@ void CmTrafficDlgInit(HWND hWnd)
 
 	if (CbNum(hWnd, C_HOST) == 0)
 	{
-		CbAddStr(hWnd, C_HOST, L"speed.softether.com", 0);
+		CbAddStr(hWnd, C_HOST, L"speed.comfyconnect.example", 0);
 	}
 
 	if (IsEmptyStr(t.Host) == false)
