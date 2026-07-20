@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ComfyConnect VPN — Admin Console</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<style>
+  :root{
+    --pri:#1E5EFF; --pri6:#1A50DB; --teal:#14B8A6; --ink:#0F172A; --slate:#475569;
+    --muted:#94A3B8; --bg:#F1F5F9; --card:#fff; --bd:#E2E8F0; --ok:#16A34A; --warn:#D97706; --err:#DC2626;
+    --sh:0 1px 2px rgba(15,23,42,.06),0 8px 24px rgba(15,23,42,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{font-family:'Segoe UI',system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+  a{color:var(--pri)}
+  button{font-family:inherit;cursor:pointer}
+  .hidden{display:none!important}
+
+  /* ---------- Login ---------- */
+  #login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#0F172A 0%,#14224A 55%,#1A50DB 130%);padding:20px}
+  .login-card{background:var(--card);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.35);
+    width:100%;max-width:400px;padding:34px 32px}
+  .login-card .brand{display:flex;justify-content:center;margin-bottom:6px}
+  .login-card h1{font-size:19px;text-align:center;margin:14px 0 2px}
+  .login-card p.sub{text-align:center;color:var(--slate);font-size:13px;margin:0 0 22px}
+  label{display:block;font-size:12px;font-weight:700;color:var(--slate);margin:14px 0 6px;letter-spacing:.02em;text-transform:uppercase}
+  input[type=text],input[type=password]{width:100%;padding:11px 13px;border:1px solid var(--bd);border-radius:10px;font-size:14px;color:var(--ink)}
+  input:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px rgba(30,94,255,.15)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;font-weight:600;font-size:14px;padding:11px 16px}
+  .btn-pri{background:var(--pri);color:#fff;width:100%;margin-top:22px}
+  .btn-pri:hover{background:var(--pri6)}
+  .btn-sm{padding:7px 12px;font-size:13px;border-radius:8px}
+  .btn-ghost{background:#EEF2F7;color:var(--ink)}
+  .btn-ghost:hover{background:#E2E8F0}
+  .btn-danger{background:#FEE2E2;color:#B91C1C}
+  .btn-danger:hover{background:#FECACA}
+  .login-err{color:var(--err);font-size:13px;margin-top:14px;text-align:center;min-height:18px}
+  .adv{margin-top:16px;font-size:12px;color:var(--slate);text-align:center;cursor:pointer;user-select:none}
+
+  /* ---------- App shell ---------- */
+  #app{display:grid;grid-template-columns:230px 1fr;grid-template-rows:60px 1fr;height:100vh}
+  .topbar{grid-column:1/3;display:flex;align-items:center;gap:16px;padding:0 20px;background:var(--ink);color:#fff}
+  .topbar .logo{height:28px}
+  .topbar .server{font-size:13px;color:#C7D2FE;margin-left:auto;display:flex;align-items:center;gap:8px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px rgba(22,163,74,.25)}
+  .sidebar{background:#fff;border-right:1px solid var(--bd);padding:14px 10px;overflow:auto}
+  .navlink{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:10px;color:var(--slate);
+    font-weight:600;font-size:14px;text-decoration:none;margin-bottom:3px}
+  .navlink svg{width:18px;height:18px;flex:none}
+  .navlink:hover{background:#F1F5F9;color:var(--ink)}
+  .navlink.active{background:linear-gradient(90deg,rgba(30,94,255,.12),rgba(20,184,166,.10));color:var(--pri)}
+  .sidebar .foot{margin-top:18px;padding:12px 13px;font-size:11px;color:var(--muted);border-top:1px solid var(--bd)}
+  .main{overflow:auto;padding:24px 28px}
+  .view-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+  .view-head h2{margin:0;font-size:22px}
+  .view-head .spacer{flex:1}
+  .muted{color:var(--slate)}
+
+  /* KPI cards */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px;margin-bottom:24px}
+  .kpi{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px 18px;box-shadow:var(--sh)}
+  .kpi .l{font-size:12px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.03em}
+  .kpi .v{font-size:28px;font-weight:800;margin-top:8px;letter-spacing:-.02em}
+  .kpi .s{font-size:12px;color:var(--muted);margin-top:2px}
+  .kpi.accent{background:linear-gradient(135deg,var(--pri),var(--teal));border:0;color:#fff}
+  .kpi.accent .l,.kpi.accent .s{color:rgba(255,255,255,.85)}
+
+  /* Cards + tables */
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--sh);margin-bottom:22px;overflow:hidden}
+  .card-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--bd)}
+  .card-head h3{margin:0;font-size:15px}
+  .card-head .spacer{flex:1}
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--slate);font-weight:700;padding:11px 18px;background:#F8FAFC;border-bottom:1px solid var(--bd)}
+  td{padding:12px 18px;font-size:14px;border-bottom:1px solid #EEF2F7}
+  tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:#F8FAFC}
+  .tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
+  .tag.on{background:#DCFCE7;color:#15803D}
+  .tag.off{background:#F1F5F9;color:#64748B}
+  .empty{padding:40px;text-align:center;color:var(--muted);font-size:14px}
+  .row-actions{display:flex;gap:8px;justify-content:flex-end}
+  code{background:#EEF2F7;padding:2px 6px;border-radius:5px;font-size:12px}
+  select{padding:8px 12px;border:1px solid var(--bd);border-radius:9px;font-size:14px;background:#fff}
+
+  /* Modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+  .modal{background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.35);width:100%;max-width:420px;padding:26px}
+  .modal h3{margin:0 0 4px;font-size:18px}
+  .modal p.sub{margin:0 0 8px;color:var(--slate);font-size:13px}
+  .modal-actions{display:flex;gap:10px;margin-top:22px}
+  .modal-actions .btn{flex:1}
+
+  /* Toast */
+  #toasts{position:fixed;right:20px;bottom:20px;display:flex;flex-direction:column;gap:10px;z-index:100}
+  .toast{background:var(--ink);color:#fff;padding:12px 16px;border-radius:10px;font-size:14px;box-shadow:var(--sh);max-width:340px}
+  .toast.ok{background:#15803D}.toast.err{background:#B91C1C}
+  @media(max-width:820px){#app{grid-template-columns:0 1fr}.sidebar{display:none}}
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div id="login">
+  <div class="login-card">
+    <div class="brand"><img src="logo.svg" alt="ComfyConnect" height="34"></div>
+    <h1>Admin Console</h1>
+    <p class="sub">Sign in to manage your VPN</p>
+    <form id="loginForm" onsubmit="doLogin(event)">
+      <div id="advBox" class="hidden">
+        <label>Server address</label>
+        <input type="text" id="serverUrl" placeholder="https://vpn.yourcompany.com:443" autocomplete="off">
+      </div>
+      <label>Administrator password</label>
+      <input type="password" id="pw" placeholder="Server administrator password" autocomplete="current-password" autofocus>
+      <button class="btn btn-pri" type="submit" id="loginBtn">Sign in</button>
+      <div class="login-err" id="loginErr"></div>
+      <div class="adv" onclick="toggleAdv()">Connect to a different server ▾</div>
+    </form>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="app" class="hidden">
+  <div class="topbar">
+    <img src="logo.svg" class="logo" alt="ComfyConnect">
+    <div class="server"><span class="dot"></span><span id="serverName">—</span>
+      <button class="btn btn-sm btn-ghost" style="margin-left:14px" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+  <nav class="sidebar">
+    <a class="navlink active" data-view="overview" onclick="nav('overview')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Overview</a>
+    <a class="navlink" data-view="employees" onclick="nav('employees')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Employees</a>
+    <a class="navlink" data-view="sessions" onclick="nav('sessions')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Live Sessions</a>
+    <a class="navlink" data-view="hubs" onclick="nav('hubs')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>Virtual Hubs</a>
+    <div class="foot">ComfyConnect VPN<br><span id="verStr">—</span></div>
+  </nav>
+  <main class="main" id="main"></main>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+// ---------------- API layer ----------------
+const S = { url:'', pw:'', info:null };
+
+async function rpc(method, params={}){
+  // Two auth modes: (1) EMBEDDED — served by the VPN server, the browser is already
+  // authenticated, so send its credentials; (2) STANDALONE — authenticate with the
+  // server-admin password via X-VPNADMIN-PASSWORD. The server admin manages every hub
+  // (hub carried in params). Never send X-VPNADMIN-HUBNAME: empty drops the connection.
+  const opts = { method:'POST', headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({ jsonrpc:'2.0', id:'1', method, params }) };
+  if(S.pw){ opts.headers['X-VPNADMIN-PASSWORD'] = S.pw; } else { opts.credentials = 'include'; }
+  const res = await fetch(S.url + '/api/', opts);
+  if(res.status===401) throw new Error('Authentication failed — check the password.');
+  let data;
+  try { data = await res.json(); } catch(e){ throw new Error('Invalid response from server.'); }
+  if(data.error) throw new Error((data.error.message||'RPC error')+ (data.error.code?` (code ${data.error.code})`:''));
+  return data.result;
+}
+
+// ---------------- helpers ----------------
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function fmtBytes(n){ n=Number(n)||0; const u=['B','KB','MB','GB','TB']; let i=0; while(n>=1024&&i<u.length-1){n/=1024;i++;} return n.toFixed(n<10&&i>0?1:0)+' '+u[i]; }
+function fmtNum(n){ return (Number(n)||0).toLocaleString(); }
+function relTime(dt){ if(!dt) return '—'; const t=new Date(dt).getTime();
+  if(!t || t < 978307200000) return '—'; // treat epoch/zero dates (< year 2001) as no-value
+  const s=Math.max(0,(Date.now()-t)/1000);
+  if(s<60) return 'just now'; if(s<3600) return Math.floor(s/60)+'m ago'; if(s<86400) return Math.floor(s/3600)+'h ago'; return Math.floor(s/86400)+'d ago'; }
+function uptime(startDt){ if(!startDt) return '—'; const s=Math.max(0,(Date.now()-new Date(startDt).getTime())/1000);
+  const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60); return (d?d+'d ':'')+(h?h+'h ':'')+m+'m'; }
+function toast(msg,type=''){ const t=document.createElement('div'); t.className='toast '+type; t.textContent=msg;
+  $('#toasts').appendChild(t); setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .4s';setTimeout(()=>t.remove(),400);},3200); }
+
+// ---------------- login ----------------
+function toggleAdv(){ $('#advBox').classList.toggle('hidden'); }
+function enterApp(){
+  $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
+  $('#serverName').textContent = S.info.ServerProductName_str.replace(/ \(.*/,'');
+  $('#verStr').textContent = S.info.ServerVersionString_str;
+  nav('overview');
+}
+async function doLogin(e){
+  e.preventDefault();
+  const btn=$('#loginBtn'); const err=$('#loginErr'); err.textContent='';
+  S.pw = $('#pw').value;
+  const custom = $('#serverUrl').value.trim();
+  S.url = custom ? custom.replace(/\/$/,'') : (location.origin);
+  if(!/^https?:\/\//.test(S.url)) S.url='https://'+S.url;
+  btn.textContent='Signing in…'; btn.disabled=true;
+  try{ S.info = await rpc('GetServerInfo'); enterApp(); }
+  catch(ex){
+    err.textContent = ex.message.includes('Failed to fetch')
+      ? 'Cannot reach the server. Check the address, and accept its certificate first.' : ex.message;
+  }finally{ btn.textContent='Sign in'; btn.disabled=false; }
+}
+// Boot: if the console is served BY the VPN server (embedded at /admin/), the browser is
+// already authenticated — try a credential-based call and skip the login screen if it works.
+(async function boot(){
+  S.url = location.origin; S.pw = '';
+  try{ S.info = await rpc('GetServerInfo'); enterApp(); }
+  catch(e){ const p=$('#pw'); if(p) p.focus(); }
+})();
+function logout(){ if(refreshTimer)clearInterval(refreshTimer); S.pw=''; location.reload(); }
+
+// ---------------- navigation ----------------
+let curView='overview', refreshTimer=null;
+function nav(v){
+  curView=v;
+  document.querySelectorAll('.navlink').forEach(a=>a.classList.toggle('active',a.dataset.view===v));
+  if(refreshTimer){clearInterval(refreshTimer);refreshTimer=null;}
+  ({overview:renderOverview, employees:renderEmployees, sessions:renderSessions, hubs:renderHubs}[v])();
+}
+
+async function safe(fn){ try{ await fn(); }catch(ex){ toast(ex.message,'err'); } }
+
+// ---------------- Overview ----------------
+async function renderOverview(){
+  $('#main').innerHTML = `<div class="view-head"><h2>Overview</h2><div class="spacer"></div>
+    <span class="muted" id="ovClock"></span></div><div id="ov"></div>`;
+  const load = async ()=>{
+    const [st, hubs] = await Promise.all([rpc('GetServerStatus'), rpc('EnumHub')]);
+    const recv = (Number(st['Recv.UnicastBytes_u64'])||0)+(Number(st['Recv.BroadcastBytes_u64'])||0);
+    const send = (Number(st['Send.UnicastBytes_u64'])||0)+(Number(st['Send.BroadcastBytes_u64'])||0);
+    const kpi = (l,v,s,acc)=>`<div class="kpi ${acc?'accent':''}"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${s||''}</div></div>`;
+    let hubRows = (hubs.HubList||[]).map(h=>`<tr>
+      <td><strong>${esc(h.HubName_str)}</strong></td>
+      <td>${h.Online_bool?'<span class="tag on"><span class="dot"></span>Online</span>':'<span class="tag off">Offline</span>'}</td>
+      <td>${fmtNum(h.NumUsers_u32)}</td><td>${fmtNum(h.NumSessions_u32)}</td></tr>`).join('');
+    $('#ov').innerHTML = `
+      <div class="kpis">
+        ${kpi('Active Sessions', fmtNum(st.NumSessionsTotal_u32), (st.NumSessionsLocal_u32||0)+' local · '+(st.NumSessionsRemote_u32||0)+' remote', true)}
+        ${kpi('TCP Connections', fmtNum(st.NumTcpConnections_u32))}
+        ${kpi('Employees', fmtNum(st.NumUsers_u32), 'across '+fmtNum(st.NumHubTotal_u32)+' hub(s)')}
+        ${kpi('Data In', fmtBytes(recv))}
+        ${kpi('Data Out', fmtBytes(send))}
+        ${kpi('Uptime', uptime(st.StartTime_dt))}
+      </div>
+      <div class="card"><div class="card-head"><h3>Virtual Hubs</h3></div>
+        <table><thead><tr><th>Hub</th><th>Status</th><th>Employees</th><th>Sessions</th></tr></thead>
+        <tbody>${hubRows||`<tr><td colspan="4" class="empty">No hubs yet</td></tr>`}</tbody></table></div>`;
+    $('#ovClock').textContent = 'Updated '+new Date().toLocaleTimeString();
+  };
+  await safe(load);
+  refreshTimer=setInterval(()=>safe(load),5000);
+}
+
+// ---------------- Employees ----------------
+let curHub=null, hubCache=[];
+async function loadHubs(){ hubCache=(await rpc('EnumHub')).HubList||[]; if(!curHub && hubCache.length) curHub=hubCache[0].HubName_str; }
+function hubSelect(onchange){
+  return `<select onchange="${onchange}">`+hubCache.map(h=>`<option ${h.HubName_str===curHub?'selected':''}>${esc(h.HubName_str)}</option>`).join('')+`</select>`;
+}
+async function renderEmployees(){
+  $('#main').innerHTML=`<div class="view-head"><h2>Employees</h2><div class="spacer"></div>
+    <span id="hubPick"></span><button class="btn btn-sm btn-pri" style="width:auto;margin:0" onclick="addEmpModal()">+ Add employee</button></div>
+    <div class="card"><div id="empBody"><div class="empty">Loading…</div></div></div>`;
+  await safe(async()=>{
+    await loadHubs();
+    if(!hubCache.length){ $('#empBody').innerHTML=`<div class="empty">Create a Virtual Hub first (Virtual Hubs tab).</div>`; return; }
+    $('#hubPick').innerHTML='Hub: '+hubSelect('curHub=this.value;renderEmployees()');
+    const [users, sess] = await Promise.all([rpc('EnumUser',{HubName_str:curHub},curHub), rpc('EnumSession',{HubName_str:curHub},curHub)]);
+    const online = new Set((sess.SessionList||[]).map(s=>s.Username_str));
+    const rows=(users.UserList||[]).map(u=>{
+      const rx=(Number(u['Ex.Recv.UnicastBytes_u64'])||0)+(Number(u['Ex.Recv.BroadcastBytes_u64'])||0);
+      const tx=(Number(u['Ex.Send.UnicastBytes_u64'])||0)+(Number(u['Ex.Send.BroadcastBytes_u64'])||0);
+      return `<tr>
+        <td><strong>${esc(u.Name_str)}</strong>${u.Realname_utf?`<div class="muted" style="font-size:12px">${esc(u.Realname_utf)}</div>`:''}</td>
+        <td>${online.has(u.Name_str)?'<span class="tag on"><span class="dot"></span>Connected</span>':'<span class="tag off">Offline</span>'}</td>
+        <td>${fmtNum(u.NumLogin_u32)}</td>
+        <td>${Number(u.NumLogin_u32)>0 ? relTime(u.LastLoginTime_dt) : '<span class="muted">Never</span>'}</td>
+        <td>${fmtBytes(rx+tx)}</td>
+        <td class="row-actions">
+          <button class="btn btn-sm btn-ghost" onclick="resetPwModal('${esc(u.Name_str)}')">Reset password</button>
+          <button class="btn btn-sm btn-danger" onclick="delEmp('${esc(u.Name_str)}')">Remove</button></td></tr>`;
+    }).join('');
+    $('#empBody').innerHTML=`<table><thead><tr><th>Employee</th><th>Status</th><th>Logins</th><th>Last seen</th><th>Data</th><th></th></tr></thead>
+      <tbody>${rows||`<tr><td colspan="6" class="empty">No employees yet. Click “Add employee”.</td></tr>`}</tbody></table>`;
+  });
+}
+function modal(html){ const d=document.createElement('div'); d.className='modal-bg'; d.onclick=e=>{if(e.target===d)d.remove()};
+  d.innerHTML=`<div class="modal">${html}</div>`; document.body.appendChild(d); return d; }
+function addEmpModal(){
+  const m=modal(`<h3>Add employee</h3><p class="sub">Creates a VPN account in <strong>${esc(curHub)}</strong>.</p>
+    <label>Username</label><input type="text" id="m_name" placeholder="e.g. jane.doe" autofocus>
+    <label>Full name (optional)</label><input type="text" id="m_real" placeholder="Jane Doe">
+    <label>Password</label><input type="text" id="m_pw" placeholder="Set a password">
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="this.closest('.modal-bg').remove()">Cancel</button>
+    <button class="btn btn-pri" onclick="createEmp(this)">Create</button></div>`);
+  m.querySelector('#m_name').focus();
+}
+async function createEmp(btn){
+  const name=btn.closest('.modal').querySelector('#m_name').value.trim();
+  const real=btn.closest('.modal').querySelector('#m_real').value.trim();
+  const pw=btn.closest('.modal').querySelector('#m_pw').value;
+  if(!name||!pw){ toast('Username and password are required','err'); return; }
+  btn.disabled=true; btn.textContent='Creating…';
+  await safe(async()=>{
+    await rpc('CreateUser',{HubName_str:curHub,Name_str:name,Realname_utf:real,Note_utf:'',AuthType_u32:1,Auth_Password_str:pw},curHub);
+    toast('Employee "'+name+'" added','ok'); btn.closest('.modal-bg').remove(); renderEmployees();
+  });
+  btn.disabled=false; btn.textContent='Create';
+}
+function resetPwModal(name){
+  const m=modal(`<h3>Reset password</h3><p class="sub">Set a new password for <strong>${esc(name)}</strong>.</p>
+    <label>New password</label><input type="text" id="m_pw" placeholder="New password" autofocus>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="this.closest('.modal-bg').remove()">Cancel</button>
+    <button class="btn btn-pri" onclick="doResetPw(this,'${esc(name)}')">Update</button></div>`);
+}
+async function doResetPw(btn,name){
+  const pw=btn.closest('.modal').querySelector('#m_pw').value; if(!pw){toast('Enter a password','err');return;}
+  btn.disabled=true;
+  await safe(async()=>{
+    await rpc('SetUser',{HubName_str:curHub,Name_str:name,AuthType_u32:1,Auth_Password_str:pw},curHub);
+    toast('Password updated for "'+name+'"','ok'); btn.closest('.modal-bg').remove();
+  });
+  btn.disabled=false;
+}
+async function delEmp(name){
+  if(!confirm('Remove employee "'+name+'"? They will no longer be able to connect.')) return;
+  await safe(async()=>{ await rpc('DeleteUser',{HubName_str:curHub,Name_str:name},curHub);
+    toast('Employee "'+name+'" removed','ok'); renderEmployees(); });
+}
+
+// ---------------- Sessions ----------------
+async function renderSessions(){
+  $('#main').innerHTML=`<div class="view-head"><h2>Live Sessions</h2><div class="spacer"></div><span id="hubPick"></span>
+    <span class="muted" id="sClock"></span></div><div class="card"><div id="sessBody"><div class="empty">Loading…</div></div></div>`;
+  const load=async()=>{
+    await loadHubs();
+    if(!hubCache.length){ $('#sessBody').innerHTML=`<div class="empty">No hubs yet.</div>`; return; }
+    $('#hubPick').innerHTML='Hub: '+hubSelect('curHub=this.value;renderSessions()')+'&nbsp;&nbsp;';
+    const sess=await rpc('EnumSession',{HubName_str:curHub},curHub);
+    const rows=(sess.SessionList||[]).map(s=>`<tr>
+      <td><strong>${esc(s.Username_str||s.Name_str)}</strong><div class="muted" style="font-size:12px">${esc(s.Name_str)}</div></td>
+      <td>${esc(s.ClientIP_ip||'—')}${s.Hostname_str?`<div class="muted" style="font-size:12px">${esc(s.Hostname_str)}</div>`:''}</td>
+      <td>${s.SecureNATMode_bool?'SecureNAT':s.LinkMode_bool?'Cascade':'VPN Client'}</td>
+      <td>${fmtNum(s.CurrentNumTcp_u32)}</td>
+      <td>${fmtBytes(s.PacketSize_u64)}</td>
+      <td>${relTime(s.CreatedTime_dt)}</td>
+      <td class="row-actions"><button class="btn btn-sm btn-danger" onclick="killSess('${esc(s.Name_str)}')">Disconnect</button></td></tr>`).join('');
+    $('#sessBody').innerHTML=`<table><thead><tr><th>User</th><th>Source</th><th>Type</th><th>TCP</th><th>Transferred</th><th>Connected</th><th></th></tr></thead>
+      <tbody>${rows||`<tr><td colspan="7" class="empty">No active sessions.</td></tr>`}</tbody></table>`;
+    $('#sClock').textContent='Updated '+new Date().toLocaleTimeString();
+  };
+  await safe(load); refreshTimer=setInterval(()=>safe(load),4000);
+}
+async function killSess(name){
+  if(!confirm('Disconnect session "'+name+'"?')) return;
+  await safe(async()=>{ await rpc('DeleteSession',{HubName_str:curHub,Name_str:name},curHub);
+    toast('Session disconnected','ok'); renderSessions(); });
+}
+
+// ---------------- Hubs ----------------
+async function renderHubs(){
+  $('#main').innerHTML=`<div class="view-head"><h2>Virtual Hubs</h2><div class="spacer"></div>
+    <button class="btn btn-sm btn-pri" style="width:auto;margin:0" onclick="addHubModal()">+ New hub</button></div>
+    <div class="card"><div id="hubBody"><div class="empty">Loading…</div></div></div>`;
+  await safe(async()=>{
+    const hubs=(await rpc('EnumHub')).HubList||[];
+    const rows=hubs.map(h=>`<tr>
+      <td><strong>${esc(h.HubName_str)}</strong></td>
+      <td>${h.Online_bool?'<span class="tag on"><span class="dot"></span>Online</span>':'<span class="tag off">Offline</span>'}</td>
+      <td>${fmtNum(h.NumUsers_u32)}</td><td>${fmtNum(h.NumSessions_u32)}</td>
+      <td class="row-actions"><button class="btn btn-sm btn-danger" onclick="delHub('${esc(h.HubName_str)}')">Delete</button></td></tr>`).join('');
+    $('#hubBody').innerHTML=`<table><thead><tr><th>Hub</th><th>Status</th><th>Employees</th><th>Sessions</th><th></th></tr></thead>
+      <tbody>${rows||`<tr><td colspan="5" class="empty">No hubs yet.</td></tr>`}</tbody></table>`;
+  });
+}
+function addHubModal(){
+  modal(`<h3>New Virtual Hub</h3><p class="sub">A hub is an isolated virtual network (e.g. one per team or client).</p>
+    <label>Hub name</label><input type="text" id="m_hub" placeholder="e.g. Acme-Corp" autofocus>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="this.closest('.modal-bg').remove()">Cancel</button>
+    <button class="btn btn-pri" onclick="createHub(this)">Create</button></div>`);
+}
+async function createHub(btn){
+  const name=btn.closest('.modal').querySelector('#m_hub').value.trim(); if(!name){toast('Enter a hub name','err');return;}
+  btn.disabled=true;
+  await safe(async()=>{ await rpc('CreateHub',{HubName_str:name,Online_bool:true,HubType_u32:0});
+    toast('Hub "'+name+'" created','ok'); btn.closest('.modal-bg').remove(); renderHubs(); });
+  btn.disabled=false;
+}
+async function delHub(name){
+  if(!confirm('Delete hub "'+name+'" and all its employees/sessions? This cannot be undone.')) return;
+  await safe(async()=>{ await rpc('DeleteHub',{HubName_str:name}); toast('Hub "'+name+'" deleted','ok'); renderHubs(); });
+}
+</script>
+</body>
+</html>
