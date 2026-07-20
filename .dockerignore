@@ -1,0 +1,11 @@
+# Keep the Docker build context clean and reproducible.
+# The host build dir carries a CMakeCache tied to the host path/OS — copying it
+# into the image breaks the in-container ./configure.
+build/
+out/
+deploy/data/
+deploy/logs/
+console/
+.git/
+*.log
+.DS_Store

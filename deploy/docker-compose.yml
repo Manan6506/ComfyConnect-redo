@@ -1,0 +1,24 @@
+# ComfyConnect VPN Server — one-command deployment
+# Usage:  cd deploy && ./setup.sh
+# (or:    docker compose up -d --build   then run ./setup.sh to configure)
+services:
+  comfyconnect:
+    build:
+      context: ..
+      target: vpnserver
+    image: comfyconnect/server:latest
+    container_name: comfyconnect
+    hostname: comfyconnect
+    cap_add:
+      - NET_ADMIN
+    restart: always
+    ports:
+      - "443:443"        # HTTPS tunneling + management + Admin Console + JSON-RPC API
+      - "992:992"        # HTTPS tunneling
+      - "5555:5555"      # HTTPS tunneling (alt) + Admin Console
+      - "1194:1194/udp"  # OpenVPN (employees connect here)
+      - "500:500/udp"    # IPsec/L2TP
+      - "4500:4500/udp"  # IPsec/L2TP
+    volumes:
+      - "./data:/var/lib/softether"
+      - "./logs:/var/log/softether"
