@@ -1,4 +1,4 @@
-FROM alpine AS builder
+FROM alpine:3.21 AS builder
 RUN mkdir /usr/local/src && apk add binutils --no-cache\
         linux-headers \
 	build-base \
@@ -20,7 +20,7 @@ RUN cd SoftEtherVPN &&\
         ./configure &&\
 	make -j $(getconf _NPROCESSORS_ONLN) -C build
 
-FROM alpine AS base
+FROM alpine:3.21 AS base
 RUN apk add --no-cache readline \
         openssl \
         libsodium \

@@ -1,6 +1,5 @@
 # ComfyConnect VPN Server — one-command deployment
 # Usage:  cd deploy && ./setup.sh
-# (or:    docker compose up -d --build   then run ./setup.sh to configure)
 services:
   comfyconnect:
     build:
@@ -9,16 +8,28 @@ services:
     image: comfyconnect/server:latest
     container_name: comfyconnect
     hostname: comfyconnect
-    cap_add:
-      - NET_ADMIN
-    restart: always
+    # Least privilege: drop everything, add back only what a VPN server needs.
+    cap_drop: [ALL]
+    cap_add: [NET_ADMIN, NET_BIND_SERVICE, SETUID, SETGID]
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # Resource ceilings so a flood can't exhaust the host (basic DoS containment).
+    mem_limit: 1g
+    pids_limit: 512
+    cpus: 2.0
+    ulimits:
+      nofile: 65535
     ports:
-      - "443:443"        # HTTPS tunneling + management + Admin Console + JSON-RPC API
+      # Employee-facing VPN endpoints — must be public:
+      - "443:443"        # HTTPS tunneling (and the Admin Console / API, admin-auth protected)
       - "992:992"        # HTTPS tunneling
-      - "5555:5555"      # HTTPS tunneling (alt) + Admin Console
-      - "1194:1194/udp"  # OpenVPN (employees connect here)
-      - "500:500/udp"    # IPsec/L2TP
-      - "4500:4500/udp"  # IPsec/L2TP
+      - "1194:1194/udp"  # OpenVPN
+      - "500:500/udp"    # IKE / L2TP-IPsec
+      - "4500:4500/udp"  # NAT-T / L2TP-IPsec
+      # Dedicated management/RPC port — LOCALHOST ONLY. Reach the console via an SSH tunnel:
+      #   ssh -L 5555:127.0.0.1:5555 user@your-server   then open https://127.0.0.1:5555/admin/
+      - "127.0.0.1:5555:5555"
     volumes:
       - "./data:/var/lib/softether"
       - "./logs:/var/log/softether"

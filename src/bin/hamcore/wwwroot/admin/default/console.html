@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Defense-in-depth: restrict where scripts run, block framing (clickjacking), plugins, and
+     <base> hijacking, and constrain where data can be sent. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src https: http://localhost:* http://127.0.0.1:*; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <title>ComfyConnect VPN — Admin Console</title>
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <style>
@@ -196,6 +199,11 @@ async function doLogin(e){
   const custom = $('#serverUrl').value.trim();
   S.url = custom ? custom.replace(/\/$/,'') : (location.origin);
   if(!/^https?:\/\//.test(S.url)) S.url='https://'+S.url;
+  // Never transmit the admin password over plaintext HTTP to a remote host (MITM). Upgrade to
+  // HTTPS; localhost is left as-is so a local proxy/dev setup still works.
+  if(/^http:\/\//i.test(S.url) && !/^http:\/\/(localhost|127\.0\.0\.1|\[::1\])(?::|\/|$)/i.test(S.url)){
+    S.url = S.url.replace(/^http:/i,'https:');
+  }
   btn.textContent='Signing in…'; btn.disabled=true;
   try{ S.info = await rpc('GetServerInfo'); enterApp(); }
   catch(ex){
@@ -203,6 +211,14 @@ async function doLogin(e){
       ? 'Cannot reach the server. Check the address, and accept its certificate first.' : ex.message;
   }finally{ btn.textContent='Sign in'; btn.disabled=false; }
 }
+// Delegated actions for row buttons. data-name carries the value as a DOM property (read via
+// dataset), never re-parsed as HTML or JS — so there is no injection sink for hub/user/session names.
+document.addEventListener('click', (e)=>{
+  const b = e.target.closest('button[data-act]'); if(!b) return;
+  const name = b.dataset.name || '';
+  ({ delemp:delEmp, resetpw:resetPwModal, killsess:killSess, delhub:delHub }[b.dataset.act] || (()=>{}))(name);
+});
+
 // Boot: if the console is served BY the VPN server (embedded at /admin/), the browser is
 // already authenticated — try a credential-based call and skip the login screen if it works.
 (async function boot(){
@@ -280,8 +296,8 @@ async function renderEmployees(){
         <td>${Number(u.NumLogin_u32)>0 ? relTime(u.LastLoginTime_dt) : '<span class="muted">Never</span>'}</td>
         <td>${fmtBytes(rx+tx)}</td>
         <td class="row-actions">
-          <button class="btn btn-sm btn-ghost" onclick="resetPwModal('${esc(u.Name_str)}')">Reset password</button>
-          <button class="btn btn-sm btn-danger" onclick="delEmp('${esc(u.Name_str)}')">Remove</button></td></tr>`;
+          <button class="btn btn-sm btn-ghost" data-act="resetpw" data-name="${esc(u.Name_str)}">Reset password</button>
+          <button class="btn btn-sm btn-danger" data-act="delemp" data-name="${esc(u.Name_str)}">Remove</button></td></tr>`;
     }).join('');
     $('#empBody').innerHTML=`<table><thead><tr><th>Employee</th><th>Status</th><th>Logins</th><th>Last seen</th><th>Data</th><th></th></tr></thead>
       <tbody>${rows||`<tr><td colspan="6" class="empty">No employees yet. Click “Add employee”.</td></tr>`}</tbody></table>`;
@@ -314,7 +330,9 @@ function resetPwModal(name){
   const m=modal(`<h3>Reset password</h3><p class="sub">Set a new password for <strong>${esc(name)}</strong>.</p>
     <label>New password</label><input type="text" id="m_pw" placeholder="New password" autofocus>
     <div class="modal-actions"><button class="btn btn-ghost" onclick="this.closest('.modal-bg').remove()">Cancel</button>
-    <button class="btn btn-pri" onclick="doResetPw(this,'${esc(name)}')">Update</button></div>`);
+    <button class="btn btn-pri" id="m_reset">Update</button></div>`);
+  // Capture `name` via closure — never interpolate it into an inline handler.
+  m.querySelector('#m_reset').addEventListener('click', function(){ doResetPw(this, name); });
 }
 async function doResetPw(btn,name){
   const pw=btn.closest('.modal').querySelector('#m_pw').value; if(!pw){toast('Enter a password','err');return;}
@@ -347,7 +365,7 @@ async function renderSessions(){
       <td>${fmtNum(s.CurrentNumTcp_u32)}</td>
       <td>${fmtBytes(s.PacketSize_u64)}</td>
       <td>${relTime(s.CreatedTime_dt)}</td>
-      <td class="row-actions"><button class="btn btn-sm btn-danger" onclick="killSess('${esc(s.Name_str)}')">Disconnect</button></td></tr>`).join('');
+      <td class="row-actions"><button class="btn btn-sm btn-danger" data-act="killsess" data-name="${esc(s.Name_str)}">Disconnect</button></td></tr>`).join('');
     $('#sessBody').innerHTML=`<table><thead><tr><th>User</th><th>Source</th><th>Type</th><th>TCP</th><th>Transferred</th><th>Connected</th><th></th></tr></thead>
       <tbody>${rows||`<tr><td colspan="7" class="empty">No active sessions.</td></tr>`}</tbody></table>`;
     $('#sClock').textContent='Updated '+new Date().toLocaleTimeString();
@@ -371,7 +389,7 @@ async function renderHubs(){
       <td><strong>${esc(h.HubName_str)}</strong></td>
       <td>${h.Online_bool?'<span class="tag on"><span class="dot"></span>Online</span>':'<span class="tag off">Offline</span>'}</td>
       <td>${fmtNum(h.NumUsers_u32)}</td><td>${fmtNum(h.NumSessions_u32)}</td>
-      <td class="row-actions"><button class="btn btn-sm btn-danger" onclick="delHub('${esc(h.HubName_str)}')">Delete</button></td></tr>`).join('');
+      <td class="row-actions"><button class="btn btn-sm btn-danger" data-act="delhub" data-name="${esc(h.HubName_str)}">Delete</button></td></tr>`).join('');
     $('#hubBody').innerHTML=`<table><thead><tr><th>Hub</th><th>Status</th><th>Employees</th><th>Sessions</th><th></th></tr></thead>
       <tbody>${rows||`<tr><td colspan="5" class="empty">No hubs yet.</td></tr>`}</tbody></table>`;
   });
