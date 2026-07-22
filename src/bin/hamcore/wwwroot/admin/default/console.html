@@ -7,7 +7,7 @@
      <base> hijacking, and constrain where data can be sent. -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src https: http://localhost:* http://127.0.0.1:*; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <title>ComfyConnect VPN — Admin Console</title>
-<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="icon" href="logo.svg?v=2" type="image/svg+xml">
 <style>
   :root{
     --pri:#1E5EFF; --pri6:#1A50DB; --teal:#14B8A6; --ink:#0F172A; --slate:#475569;
@@ -109,7 +109,7 @@
 <!-- ================= LOGIN ================= -->
 <div id="login">
   <div class="login-card">
-    <div class="brand"><img src="logo-light.svg" alt="ComfyConnect" height="34"></div>
+    <div class="brand"><img src="logo-light.svg?v=2" alt="ComfyConnect" height="34"></div>
     <h1>Admin Console</h1>
     <p class="sub">Sign in to manage your VPN</p>
     <form id="loginForm" onsubmit="doLogin(event)">
@@ -129,7 +129,7 @@
 <!-- ================= APP ================= -->
 <div id="app" class="hidden">
   <div class="topbar">
-    <img src="logo.svg" class="logo" alt="ComfyConnect">
+    <img src="logo.svg?v=2" class="logo" alt="ComfyConnect">
     <div class="server"><span class="dot"></span><span id="serverName">—</span>
       <button class="btn btn-sm btn-ghost" style="margin-left:14px" onclick="logout()">Sign out</button>
     </div>
