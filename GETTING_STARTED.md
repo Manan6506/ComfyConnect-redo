@@ -1,5 +1,7 @@
 <p align="center"><img src="resources/comfyconnect-vpn.svg" width="72" alt="ComfyConnect"></p>
 
+> 📘 **Full documentation:** the complete [ComfyConnect User Manual & Administrator Guide](docs/USER_MANUAL.md) covers every feature, all four admin tools, and a full command reference.
+
 # ComfyConnect VPN — Getting Started
 
 Everything you need to stand up a secure work-from-home VPN for a business client and

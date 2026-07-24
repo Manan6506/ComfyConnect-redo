@@ -42,3 +42,7 @@ ComfyConnect VPN is distributed under the **Apache License 2.0** (see
 third-party component notices are retained in [NOTICE](NOTICE). "SoftEther" is a
 trademark of its respective owner and is referenced only to attribute the
 upstream project.
+
+## Documentation
+
+- **[User Manual & Administrator Guide](docs/USER_MANUAL.md)** — complete guide: deploy, administer (web console / native GUI / `vpncmd` / API), every feature module, and a full command reference.
