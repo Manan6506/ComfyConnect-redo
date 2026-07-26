@@ -1,4 +1,9 @@
-on: [push, pull_request]
+name: Build Windows Installer
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:   # adds a manual "Run workflow" button in the Actions tab
 
 permissions:
   contents: read
