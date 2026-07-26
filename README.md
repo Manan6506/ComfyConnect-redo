@@ -46,3 +46,4 @@ upstream project.
 ## Documentation
 
 - **[User Manual & Administrator Guide](docs/USER_MANUAL.md)** — complete guide: deploy, administer (web console / native GUI / `vpncmd` / API), every feature module, and a full command reference.
+- **[Download the Windows app](docs/DOWNLOAD_WINDOWS.md)** — get the pre-built `.exe` installers from CI, no build tools needed.
