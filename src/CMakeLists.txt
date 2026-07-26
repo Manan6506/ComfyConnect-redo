@@ -67,6 +67,18 @@ if(WIN32)
   endif()
   add_definitions(-DWIN32 -D_WINDOWS -DOS_WIN32 -D_CRT_SECURE_NO_WARNINGS)
 
+  # Newer LLVM/Clang (19+, and clang-cl 22 on current GitHub windows-latest runners) promoted
+  # several long-standing C warnings to *errors by default*. This upstream SoftEther code was
+  # written when they were warnings (e.g. src/Mayaqua/Network.c passes IP_ADAPTER_ADDRESSES_XP*
+  # where PIP_ADAPTER_ADDRESSES is expected). Downgrade those diagnostics back to warnings so the
+  # code compiles with the newest toolchain. This changes no logic — it only relaxes warning
+  # severity, exactly as older Clang and MSVC/GCC still treat them.
+  if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+    set(_CC_RELAX "-Wno-error -Wno-error=incompatible-pointer-types -Wno-error=incompatible-function-pointer-types -Wno-error=implicit-function-declaration -Wno-error=implicit-int -Wno-error=int-conversion -Wno-error=deprecated-non-prototype")
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${_CC_RELAX}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_CC_RELAX}")
+  endif()
+
   #
   # https://msrc-blog.microsoft.com/2020/08/17/control-flow-guard-for-clang-llvm-and-rust/
   #
