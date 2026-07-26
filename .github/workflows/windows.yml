@@ -14,8 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         platform: [
-          { ARCHITECTURE: x64, VCPKG_TRIPLET: "x64-windows-static", RUNNER: "windows-latest", CMAKE_EXTRA_FLAGS: ""},
-          { ARCHITECTURE: x86, VCPKG_TRIPLET: "x86-windows-static", RUNNER: "windows-latest", CMAKE_EXTRA_FLAGS: ""}
+          { ARCHITECTURE: x64, VCPKG_TRIPLET: "x64-windows-static", RUNNER: "windows-latest", CMAKE_EXTRA_FLAGS: ""}
         ]
     runs-on: ${{ matrix.platform.RUNNER }}
     name: ${{ matrix.platform.ARCHITECTURE }}
