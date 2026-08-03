@@ -20,7 +20,7 @@ endif()
 cmake_policy(SET CMP0091 NEW)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-project("SoftEther VPN"
+project("ComfyConnect VPN"
   VERSION "5.02.${BUILD_NUMBER}"
   LANGUAGES C
 )
@@ -84,7 +84,7 @@ if(UNIX)
   set(CPACK_PACKAGE_DIRECTORY ${BUILD_DIRECTORY})
   set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
   set(CPACK_PACKAGE_VENDOR "SoftEther")
-  set(CPACK_PACKAGE_NAME "softether")
+  set(CPACK_PACKAGE_NAME "comfyconnect")
   set(CPACK_PACKAGE_DESCRIPTION_FILE "${TOP_DIRECTORY}/description")
   set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "SoftEther VPN is an open-source cross-platform multi-protocol VPN program, created as an academic project in the University of Tsukuba.")
 

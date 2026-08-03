@@ -12,14 +12,14 @@ BEGIN
     BEGIN
         BLOCK "041104b0"
         BEGIN
-            VALUE "CompanyName", "University of Tsukuba"
-            VALUE "FileDescription", "VPN Gate Plug-in DLL for SoftEther VPN"
+            VALUE "CompanyName", "ComfyConnect"
+            VALUE "FileDescription", "ComfyConnect VPN Plug-in"
             VALUE "FileVersion", "$VER_MAJOR$, $VER_MINOR$, 0, $VER_BUILD$"
             VALUE "InternalName", "$INTERNALNAME$"
             VALUE "LegalCopyright", "Copyright (C) 2012-$YEAR$ VPN Gate Project at University of Tsukuba. All Rights Reserved."
             VALUE "LegalTrademarks", ""
             VALUE "OriginalFilename", "$FILENAME$"
-            VALUE "ProductName", "VPN Gate Software"
+            VALUE "ProductName", "ComfyConnect VPN"
             VALUE "ProductVersion", "$VER_MAJOR$, $VER_MINOR$, 0, $VER_BUILD$"
         END
     END

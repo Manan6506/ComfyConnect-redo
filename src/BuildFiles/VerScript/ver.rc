@@ -1,4 +1,4 @@
-#pragma code_page(932)
+#pragma code_page(65001)
 
 1 VERSIONINFO
  FILEVERSION ${PROJECT_VERSION_MAJOR},${PROJECT_VERSION_MINOR},0,${PROJECT_VERSION_PATCH}
@@ -10,14 +10,14 @@
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "041104b0"
+        BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "SoftEther VPN Project at University of Tsukuba, Japan."
-            VALUE "FileDescription", "${PROJECT_NAME} ${COMPONENT_NAME} (Developer Edition)"
+            VALUE "CompanyName", "ComfyConnect"
+            VALUE "FileDescription", "${PROJECT_NAME} ${COMPONENT_NAME}"
             VALUE "FileVersion", "${PROJECT_VERSION_MAJOR}, ${PROJECT_VERSION_MINOR}, 0, ${PROJECT_VERSION_PATCH}"
             VALUE "InternalName", "${COMPONENT_INTERNAL_NAME}"
-            VALUE "LegalCopyright", "Copyright (c) 2012-${DATE_YEAR} all contributors on SoftEther VPN project in GitHub. Copyright (C) 2004-${DATE_YEAR} Daiyuu Nobori, SoftEther Project at University of Tsukuba, and SoftEther Corporation. All Rights Reserved."
-            VALUE "LegalTrademarks", "SoftEther(R) is a registered trademark of SoftEther Corporation in Japan, United States and People's Republic of China. SoftEther Corporation is a company founded at University of Tsukuba, Japan."
+            VALUE "LegalCopyright", "Copyright (c) ${DATE_YEAR} ComfyConnect. All Rights Reserved. Built on SoftEther VPN - Copyright (c) all contributors on the SoftEther VPN project in GitHub, and Copyright (c) Daiyuu Nobori, SoftEther Project at University of Tsukuba, and SoftEther Corporation. Licensed under the Apache License, Version 2.0."
+            VALUE "LegalTrademarks", "ComfyConnect is a trademark of its owner. SoftEther is a trademark of its respective owner and is referenced solely to attribute the upstream open-source project; ComfyConnect is not affiliated with or endorsed by it."
             VALUE "OriginalFilename", "${COMPONENT_FILE_NAME}"
             VALUE "ProductName", "${PROJECT_NAME} ${COMPONENT_NAME}"
             VALUE "ProductVersion", "${PROJECT_VERSION_MAJOR}, ${PROJECT_VERSION_MINOR}, 0, ${PROJECT_VERSION_PATCH}"
@@ -25,6 +25,6 @@ BEGIN
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x411, 1200
+        VALUE "Translation", 0x409, 1200
     END
 END

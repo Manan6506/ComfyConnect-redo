@@ -131,6 +131,48 @@ def protocol_figure(size=(428, 160)):
                     line, font=cf, fill=SLATE)
     return img.resize(size, Image.LANCZOS)
 
+
+def protocol_diagram(size, client="VPN Client", proto="Encrypted tunnel"):
+    """Simple client -> ComfyConnect server diagram, replacing upstream art that
+    labelled the server box 'SoftEther VPN Server'."""
+    w, h = size
+    W, H = w*S, h*S
+    img = Image.new("RGB", (W, H), WHITE)
+    d = ImageDraw.Draw(img)
+    bw, bh = W*0.26, H*0.34
+    cy = H*0.50
+    lf, sf = font(int(H*0.095)), font(int(H*0.082), bold=False)
+    # client box
+    d.rounded_rectangle([W*0.04, cy-bh/2, W*0.04+bw, cy+bh/2],
+                        radius=int(H*0.06), fill=hx('EDE9FE'),
+                        outline=hx('C4B5FD'), width=max(1, int(H*0.012)))
+    d.text((W*0.04+bw/2 - d.textlength(client, font=lf)/2, cy-int(H*0.05)),
+           client, font=lf, fill=hx('5B21B6'))
+    # server box (ours)
+    sx = W*0.70
+    d.rounded_rectangle([sx, cy-bh/2, sx+bw, cy+bh/2], radius=int(H*0.06),
+                        fill=hx('312E81'))
+    # shrink the label until it fits inside the box (no clipped text)
+    t, t2 = "ComfyConnect", "VPN Server"
+    bf, bs = int(H*0.095), int(H*0.082)
+    while bf > 6 and d.textlength(t, font=font(bf)) > bw*0.88:
+        bf -= 1
+    while bs > 5 and d.textlength(t2, font=font(bs, bold=False)) > bw*0.88:
+        bs -= 1
+    f1, f2 = font(bf), font(bs, bold=False)
+    d.text((sx+bw/2 - d.textlength(t, font=f1)/2, cy-int(H*0.09)), t,
+           font=f1, fill=WHITE)
+    d.text((sx+bw/2 - d.textlength(t2, font=f2)/2, cy+int(H*0.01)), t2,
+           font=f2, fill=hx('C4B5FD'))
+    # tunnel arrow
+    ax0, ax1 = W*0.04+bw+W*0.03, sx-W*0.03
+    d.line([(ax0, cy), (ax1, cy)], fill=STEAM, width=max(2, int(H*0.030)))
+    a = int(H*0.055)
+    d.polygon([(ax1+a*0.6, cy), (ax1-a*0.5, cy-a), (ax1-a*0.5, cy+a)], fill=STEAM)
+    d.text(((ax0+ax1)/2 - d.textlength(proto, font=sf)/2, cy-int(H*0.155)),
+           proto, font=sf, fill=SLATE)
+    return img.resize(size, Image.LANCZOS)
+
 # ── what to regenerate: filename -> builder ──────────────────────────────────
 JOBS = {
     # seen directly in the installer / Server Manager
@@ -158,6 +200,20 @@ JOBS = {
     "AzureCn.bmp":         lambda s: centered_mark(s, frac=0.45),
     "AzureJa.bmp":         lambda s: centered_mark(s, frac=0.45),
     "Update.bmp":          lambda s: banner(s, None, "Software Update"),
+    # diagrams whose upstream art labelled the server box "SoftEther VPN Server"
+    "OpenVPN.bmp":         lambda s: protocol_diagram(s, "OpenVPN Client", "OpenVPN protocol"),
+    "SSTP.bmp":            lambda s: protocol_diagram(s, "Windows client", "MS-SSTP protocol"),
+    "VMBridge.bmp":        lambda s: protocol_diagram(s, "Virtual machine", "Bridged network"),
+    "SpecialListener.bmp": lambda s: protocol_diagram(s, "VPN Client", "VPN over ICMP / DNS"),
+    "setup_1.bmp":         lambda s: centered_mark(s, frac=0.62),
+    "setup_2.bmp":         lambda s: protocol_diagram(s, "Branch site", "Site-to-site"),
+    # University of Tsukuba lettering / mascot / smartcard photos carrying the old logo
+    "Coins.bmp":           centered_wordmark,
+    "Zurukko.bmp":         lambda s: centered_mark(s, frac=0.86),
+    "Test.bmp":            lambda s: centered_mark(s, frac=0.86),
+    "Secure.bmp":          lambda s: centered_mark(s, frac=0.50),
+    "Secure2.bmp":         lambda s: centered_mark(s, frac=0.70),
+    "Secure3.bmp":         lambda s: centered_mark(s, frac=0.70),
 }
 
 def main():
