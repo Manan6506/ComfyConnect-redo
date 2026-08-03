@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="resources/comfyconnect-vpn.svg" width="96" alt="ComfyConnect VPN">
+  <img src="resources/comfyconnect-vpn.png" width="96" alt="ComfyConnect VPN">
 </p>
 
 # ComfyConnect VPN

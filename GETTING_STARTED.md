@@ -1,4 +1,4 @@
-<p align="center"><img src="resources/comfyconnect-vpn.svg" width="72" alt="ComfyConnect"></p>
+<p align="center"><img src="resources/comfyconnect-vpn.png" width="72" alt="ComfyConnect"></p>
 
 > 📘 **Full documentation:** the complete [ComfyConnect User Manual & Administrator Guide](docs/USER_MANUAL.md) covers every feature, all four admin tools, and a full command reference.
 

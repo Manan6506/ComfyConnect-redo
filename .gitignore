@@ -210,3 +210,7 @@ developer_tools/stbchecker/**/*.binlog
 developer_tools/stbchecker/**/*.nvuser
 developer_tools/stbchecker/**/.mfractor/
 /vcpkg_installed
+
+# Python bytecode from the branding generators
+__pycache__/
+*.pyc
